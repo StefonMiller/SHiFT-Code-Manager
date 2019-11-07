@@ -82,16 +82,7 @@ class Ui(QtWidgets.QMainWindow):
         self.popup = None
         # index - number of rows in our spreadsheet
         self.index = len(sheet.col_values(1)) + 1
-        self.show()
-
-    # Takes us to the addCode widget in our stackedwidget
-    def addCode(self):
-        self.stack.setCurrentIndex(2)
-
-    # Takes us to the viewCodes widget in our stackedwidget
-    def viewCodes(self):
-        # get data from the sheet and fill the qLabels
-        self.stack.setCurrentIndex(1)
+        #Initialize view widget
         codes = sheet.col_values(2)
         dates = sheet.col_values(3)
         expired = sheet.col_values(5)
@@ -114,6 +105,17 @@ class Ui(QtWidgets.QMainWindow):
             temp += (str(expired[x]) + "\n")
             self.exps.setText(temp)
 
+        self.show()
+
+    # Takes us to the addCode widget in our stackedwidget
+    def addCode(self):
+        self.stack.setCurrentIndex(2)
+
+    # Takes us to the viewCodes widget in our stackedwidget
+    def viewCodes(self):
+        # get data from the sheet and fill the qLabels
+        self.stack.setCurrentIndex(1)
+
     # Return to the main menu of our stackedwidget
     def menuReturn(self):
         self.stack.setCurrentIndex(0)
@@ -123,6 +125,9 @@ class Ui(QtWidgets.QMainWindow):
         # Fill an array with all fields the user entereed
         tempEntry = []
         tempEntry.append(self.index)
+        temp = self.ids.text()
+        temp += (str(self.index) + "\n")
+        self.ids.setText(temp)
         tempCodes = [self.code1.text(), self.code2.text(), self.code3.text(), self.code4.text(), self.code5.text()]
         # Make sure all code parts are not blank, contain only numbers and characters, and are appropriate length
         for x in tempCodes:
@@ -130,10 +135,23 @@ class Ui(QtWidgets.QMainWindow):
                 self.correctAns("One or more of the code fields is either blank, too short, or not valid.  Try again")
                 return
         tempStr = self.code1.text() + "-" + self.code2.text() + "-" + self.code3.text() + "-" + self.code4.text() + "-" + self.code5.text()
+        #Append entries to sheet and update the view labels
         tempEntry.append(tempStr)
+        temp = self.codes.text()
+        temp += (tempStr + "\n")
+        self.codes.setText(temp)
         tempEntry.append(self.date.text())
+        temp = self.dates.text()
+        temp += (self.date.text() + "\n")
+        self.dates.setText(temp)
         tempEntry.append(self.reward.text())
+        temp = self.rewards.text()
+        temp += (self.reward.text() + "\n")
+        self.rewards.setText(temp)
         tempEntry.append(self.expired.currentText())
+        temp = self.exps.text()
+        temp += (self.expired.currentText() + "\n")
+        self.exps.setText(temp)
         # If any index is blank, the entry is not valid
         for x in tempEntry:
             if x == '':
